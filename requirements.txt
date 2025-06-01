@@ -1,0 +1,42 @@
+# 最新版LangGraphとOpenAI関連パッケージ（2025年5月時点）
+langgraph>=0.4.5
+langchain>=0.3.18
+langchain-openai>=0.3.18
+langchain-community>=0.0.27
+python-dotenv>=1.0.0
+jupyter>=1.0.0
+
+# 高度な対話型ターミナルライブラリ
+prompt_toolkit>=3.0.43
+rich>=13.9.4
+
+# その他の有用なCLIライブラリ（オプション）
+click>=8.0.0
+typer>=0.9.0
+questionary>=1.10.0
+
+# デバッグと可視化（推奨）
+langsmith>=0.2.0
+
+# Web検索
+google-search-results>=2.4.2
+
+# データ処理とログ
+pydantic>=2.10.0
+httpx>=0.28.0
+aiohttp>=3.11.0
+
+# トレーシング・ログ機能
+dataclasses-json>=0.6.7
+uuid>=1.30
+pathlib
+
+# ターミナルUI（デモ用）
+prompt-toolkit>=3.0.43
+rich>=13.9.4
+
+# RAG関連パッケージ
+chromadb>=0.4.22
+sentence-transformers>=2.2.2
+tiktoken>=0.5.2
+faiss-cpu>=1.7.4
