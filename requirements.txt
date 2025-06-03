@@ -1,9 +1,10 @@
 # 最新版LangGraphとOpenAI関連パッケージ（2025年5月時点）
 langgraph>=0.4.5
-langchain>=0.3.18
-langchain-openai>=0.3.18
+langchain>=0.1.0
+langchain-openai>=0.0.5
 langchain-community>=0.0.27
 python-dotenv>=1.0.0
+openai>=1.12.0  # Azure OpenAI Service用
 jupyter>=1.0.0
 
 # 高度な対話型ターミナルライブラリ
@@ -40,3 +41,6 @@ chromadb>=0.4.22
 sentence-transformers>=2.2.2
 tiktoken>=0.5.2
 faiss-cpu>=1.7.4
+
+# 追加のlangchain-coreパッケージ
+langchain-core>=0.1.0

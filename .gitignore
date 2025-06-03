@@ -32,9 +32,12 @@ env/
 *.swp
 *.swo
 
-# ログ
-logs/
-*.log
+# ログとアーティファクト
+# ディレクトリ自体は保持し、中身のみ除外
+logs/*
+!logs/.gitkeep
+artifact/*
+!artifact/.gitkeep
 
 # キャッシュ
 .cache/
@@ -44,18 +47,7 @@ htmlcov/
 
 # その他
 .DS_Store
-artifact/
 chroma_db/
-
-# 環境変数
-.env
-
-# ログとアーティファクト
-# artifact/ と logs/ ディレクトリ自体は保持し、中身のみ除外
-artifact/*
-!artifact/.gitkeep
-logs/*
-!logs/.gitkeep
 
 # OS
 Thumbs.db 

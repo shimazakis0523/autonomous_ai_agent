@@ -1,0 +1,183 @@
+@startuml Repository Class Diagram
+
+' スタイル設定
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+' パッケージ定義
+package "src.core" {
+    class AutonomousAgent {
+        -llm: AzureChatOpenAI
+        -tools: List[BaseTool]
+        -memory: ConversationBufferMemory
+        +__init__(api_key: str, base_url: str)
+        +run(input: str): str
+        +_create_agent(): AgentExecutor
+    }
+
+    class AgentState {
+        +messages: List[BaseMessage]
+        +current_step: int
+        +total_steps: int
+        +add_message(message: BaseMessage)
+        +get_conversation_history(): str
+    }
+}
+
+package "src.processors" {
+    class InputProcessor {
+        +process(input: str): dict
+        +validate_input(input: dict): bool
+    }
+
+    class IntentAnalyzer {
+        +analyze(input: dict): str
+        +extract_entities(input: dict): dict
+    }
+
+    class PlanGenerator {
+        +generate_plan(intent: str, entities: dict): List[str]
+        +validate_plan(plan: List[str]): bool
+    }
+
+    class TaskOrchestrator {
+        -agent: AutonomousAgent
+        +execute_plan(plan: List[str]): List[dict]
+        +handle_error(error: Exception): dict
+    }
+
+    class ResultProcessor {
+        +process_results(results: List[dict]): str
+        +format_output(output: str): str
+    }
+
+    class ResponseGenerator {
+        +generate_response(results: str): str
+        +format_response(response: str): str
+    }
+}
+
+package "src.tools" {
+    class BaseTool {
+        +name: str
+        +description: str
+        +run(input: str): str
+    }
+
+    class SearchTool {
+        +search(query: str): List[dict]
+        +filter_results(results: List[dict]): List[dict]
+    }
+
+    class CalculatorTool {
+        +calculate(expression: str): float
+        +validate_expression(expression: str): bool
+    }
+}
+
+package "src.utils" {
+    class Logger {
+        +setup_logging()
+        +get_logger(name: str): Logger
+    }
+
+    class ConfigManager {
+        +load_config(): dict
+        +get_setting(key: str): Any
+        +validate_config(config: dict): bool
+    }
+}
+
+package "src.test" {
+    class TestLLMConnection {
+        -logger: Logger
+        +validate_azure_endpoint(endpoint: str): tuple[bool, str]
+        +test_llm_connection(): bool
+        +main(): None
+    }
+}
+
+' 外部パッケージ
+package "langchain" {
+    class AgentExecutor {
+        +run(input: str): str
+        +arun(input: str): str
+    }
+
+    class ConversationBufferMemory {
+        +save_context(inputs: dict, outputs: dict)
+        +load_memory_variables(inputs: dict): dict
+    }
+}
+
+package "langchain_openai" {
+    class AzureChatOpenAI {
+        +azure_deployment: str
+        +openai_api_version: str
+        +azure_endpoint: str
+        +api_key: str
+        +ainvoke(messages: List[BaseMessage]): AIMessage
+    }
+}
+
+package "langchain_core.messages" {
+    abstract class BaseMessage {
+        +content: str
+        +type: str
+    }
+    
+    class HumanMessage {
+        +content: str
+    }
+    
+    class AIMessage {
+        +content: str
+    }
+}
+
+' 関係の定義
+AutonomousAgent --> AgentExecutor : uses
+AutonomousAgent --> AzureChatOpenAI : uses
+AutonomousAgent --> BaseTool : uses
+AutonomousAgent --> ConversationBufferMemory : uses
+AutonomousAgent --> AgentState : uses
+AutonomousAgent --> TaskOrchestrator : uses
+
+TaskOrchestrator --> PlanGenerator : uses
+TaskOrchestrator --> ResultProcessor : uses
+
+InputProcessor --> IntentAnalyzer : uses
+IntentAnalyzer --> PlanGenerator : uses
+PlanGenerator --> TaskOrchestrator : uses
+
+BaseTool <|-- SearchTool
+BaseTool <|-- CalculatorTool
+
+TestLLMConnection --> AzureChatOpenAI : uses
+TestLLMConnection --> Logger : uses
+
+' 環境変数の定義
+note right of AzureChatOpenAI
+  必要な環境変数:
+  - AZURE_OPENAI_API_KEY
+  - AZURE_OPENAI_ENDPOINT
+  - AZURE_OPENAI_DEPLOYMENT_NAME
+  - AZURE_OPENAI_API_VERSION
+end note
+
+' 処理フローの注釈
+note right of InputProcessor
+  処理フロー:
+  1. 入力処理
+  2. 意図分析
+  3. プラン生成
+  4. タスク実行
+  5. 結果処理
+  6. 応答生成
+end note
+
+@enduml 
